@@ -10,7 +10,7 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: ixoncloud/cert-manager-webhook-cloudns
+  repository: cloudeninc/cert-manager-webhook-cloudns
   tag: 1.0.3
   pullPolicy: IfNotPresent
 
