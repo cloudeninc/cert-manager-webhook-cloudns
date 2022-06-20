@@ -235,7 +235,8 @@ func (c *Client) doRequest(method string, url *url.URL) (json.RawMessage, error)
 
 func (c *Client) buildRequest(method string, url *url.URL) (*http.Request, error) {
 	q := url.Query()
-	q.Add("auth-id", c.authID)
+	// q.Add("auth-id", c.authID)
+	q.Add("sub-auth-user", c.authID)
 	q.Add("auth-password", c.authPassword)
 	url.RawQuery = q.Encode()
 

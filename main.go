@@ -22,6 +22,7 @@ import (
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
 	restclient "k8s.io/client-go/rest"
 	"os"
+	"log"
 )
 
 const ProviderName = "cloudns"
@@ -32,6 +33,8 @@ func main() {
 	if GroupName == "" {
 		panic("Please set the GROUP_NAME env variable.")
 	}
+
+	log.Printf("Starting group %s webhook", GroupName)
 
 	// Start webhook server
 	cmd.RunWebhookServer(GroupName,
@@ -58,6 +61,8 @@ func (c clouDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return err
 	}
 
+	log.Printf("Presenting DNS01 for %s", ch.ResolvedFQDN)
+
 	return provider.Present(ch.ResolvedFQDN, ch.Key)
 }
 
@@ -70,6 +75,8 @@ func (c clouDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return err
 	}
 
+	log.Printf("Cleaning up DNS01 for %s", ch.ResolvedFQDN)
+
 	// Remove TXT DNS record
 	return provider.CleanUp(ch.ResolvedFQDN, ch.Key)
 }
@@ -77,5 +84,6 @@ func (c clouDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 // Could be used to initialise connections or warm up caches, not needed in this case
 func (c clouDNSProviderSolver) Initialize(kubeClientConfig *restclient.Config, stopCh <-chan struct{}) error {
 	// NOOP
+	log.Printf("Initializing ClouDNS DNS01 solver...")
 	return nil
 }
